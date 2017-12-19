@@ -71,7 +71,22 @@ You want your [nginx.conf](https://www.nginx.com/resources/wiki/start/topics/exa
         }
 ```
 
-Now, restart [nginx](https://nginx.org/en/docs/) "nginx -s reload", and point your browswer to localhost:8080. 
+Now, restart [nginx](https://nginx.org/en/docs/) with "sudo systemctl restart nginx.service" to reload nginx.
+
+We need to copy over our SQL files to flyway. From the applications working directory, go ahead and run:
+
+```
+cp sql/* ~/path/to/flyway/sql/directory
+```
+
+Now, run a database migration with flyway by running:
+
+```
+flyway -url=jdbc:postgresql://localhost:5432/yourdatabasename -user=yourusername -password=yourpassword  migrate
+```
+
+Point your browser to localhost:8080. You should be able to try out the application's frontend!
+
 
 Environment Variables?
 ====================
