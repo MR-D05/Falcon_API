@@ -41,10 +41,6 @@ def authenticate(req, resp, resource, params):
         token = req.cookies['SSSNTKN']
         resource.cursor.callproc('fetch_token', [token])
         result = resource.cursor.fetchone()[0]
-        id = result['user_id']
-        resource.cursor.callproc('fetch_name', [id])
-        result = resource.cursor.fetchone()[0]
-        params['username'] = result['username']
     except (TypeError, KeyError):
         try:
             username = req.context['d']['username']
@@ -53,16 +49,19 @@ def authenticate(req, resp, resource, params):
             result = resource.cursor.fetchone()[0]
             encrypted_password = result['encrypted_password']
             valid_password = verify(password, encrypted_password)
-            if valid_password:
-                params['username'] = result['username']
+            if not valid_password:
+                raise falcon.HTTPBadRequest
         except (TypeError, KeyError):
             raise falcon.HTTPBadRequest
     finally:
-        if len(req.cookies) == 0:
-            username = req.context['d']['username']
-            resource.cursor.callproc('fetch_user', [username])
-            result = resource.cursor.fetchone()[0]
-            id = result['id']
-            token = generate_token(128)
-            resource.cursor.callproc('insert_token', [id, token])
-            resp.set_cookie("SSSNTKN", token, secure=False)
+        try:
+            if len(req.cookies) == 0:
+                username = req.context['d']['username']
+                resource.cursor.callproc('fetch_user', [username])
+                result = resource.cursor.fetchone()[0]
+                id = result['id']
+                token = generate_token(128)
+                resource.cursor.callproc('insert_token', [id, token])
+                resp.set_cookie("SSSNTKN", token, secure=False)
+        except (TypeError, KeyError):
+            raise falcon.HTTPBadRequest

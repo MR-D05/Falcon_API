@@ -29,7 +29,7 @@ document.getElementById('login-form').addEventListener('submit', function(event)
     };
     xhr.open('POST', 'http://localhost:8080/v1/api/users', true);
     xhr.setRequestHeader("Content-type", "application/json");
-    xhr.withCredentials = true;
+    xhr.withCredentials = false;
     xhr.send(JSON.stringify(data));
 });
 
@@ -53,6 +53,6 @@ document.getElementById('registration-form').addEventListener('submit', function
     };
     xhr.open('PUT', 'http://localhost:8080/v1/api/users', true);
     xhr.setRequestHeader("Content-type", "application/json");
-    xhr.withCredentials = true;
+    xhr.withCredentials = false;
     xhr.send(JSON.stringify(data));
 });

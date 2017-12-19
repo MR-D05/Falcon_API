@@ -5,6 +5,7 @@ BEGIN
     WITH x AS
         (SELECT 
             tokens.user_id,
+            tokens.username,
             tokens.token
         FROM tokens
         WHERE 

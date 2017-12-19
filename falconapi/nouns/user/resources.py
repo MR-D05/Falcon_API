@@ -20,8 +20,12 @@ class UserCollection(object):
 
 
     @falcon.before(authenticate)
-    def on_get(self, req, resp, username):
+    def on_get(self, req, resp):
         try:
+            self.cursor.callproc('fetch_token', [req.cookies['SSSNTKN']])
+            result = self.cursor.fetchone()[0]
+            print(result)
+            username = result['username']
             resp.body = json.dumps(username)
             resp.status = falcon.HTTP_200
         except:
@@ -32,10 +36,11 @@ class UserCollection(object):
                 
 
     @falcon.before(authenticate)
-    def on_post(self, req, resp, username):
+    def on_post(self, req, resp):
         try:
-            self.cursor.callproc('fetch_user', [username])
+            self.cursor.callproc('fetch_user', [req.context['d']['username']])
             result = self.cursor.fetchone()[0]
+            username = result['username']
             status = result['is_admin']
             if status:
                 resp.location = '/admins.html'
@@ -56,7 +61,7 @@ class UserCollection(object):
         result = self.cursor.fetchone()[0]
         id = result['id']
         token = generate_token(128)
-        self.cursor.callproc('insert_token', [id, token])
+        self.cursor.callproc('insert_token', [id, username, token])
         resp.set_cookie("SSSNTKN", token, secure=False)
         resp.location = '/users.html'
         resp.status = falcon.HTTP_200
