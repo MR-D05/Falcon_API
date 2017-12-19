@@ -1,0 +1,58 @@
+function login() {
+    var username = document.getElementById("login_username").value;
+    var password = document.getElementById("login_password").value;
+    var user = { Name: username, Password: password };
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            next_page = xhttp.getResponseHeader("Location");
+            console.log(next_page);
+            window.location = next_page;
+        }
+        if (this.readyState == 4 && this.status == 400) {
+            alert("Invalid Credentials");
+        }
+        if (this.readyState == 4 && this.status == 401) {
+            alert("Unauthorized");
+        }
+    };
+    xhttp.open("POST", "http://localhost:8080/v1/api/users", true);
+    xhttp.withCredentials = false;
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.send(JSON.stringify(user));
+}
+
+DATABASE_URL='postgresql://localhost:5432/falcon_api?user=bbroadstone&password=Infinite7!' APP_STORAGE_PATH=./file_storage gunicorn --reload 'falconapi.app:get_app()'
+
+
+
+if result:
+                if has_token(self.cursor, user_id):
+                    token = get_token(self.cursor, user_id)
+                    token = token[0]
+                    resp.set_cookie("SSSNTKN", token, secure=False)
+                    resp.status = falcon.HTTP_200
+                    resp.location = 'http://localhost:8080/admins.html'
+                else:
+                    new_token = generate_token(32)
+                    insert_token(self.cursor, new_token, user_id)
+                    token = get_token(self.cursor, user_id)
+                    token = token[0]
+                    resp.set_cookie("SSSNTKN", token, secure=False)
+                    resp.status = falcon.HTTP_200
+                    resp.location = 'http://localhost:8080/admins.html'
+            else:
+                if has_token(self.cursor, user_id):
+                    token = get_token(self.cursor, user_id)
+                    token = token[0]
+                    resp.set_cookie("SSSNTKN", token, secure=False)
+                    resp.status = falcon.HTTP_200
+                    resp.location = 'http://localhost:8080/users.html'
+                else:
+                    new_token = generate_token(32)
+                    insert_token(self.cursor, new_token, user_id)
+                    token = get_token(self.cursor, user_id)
+                    token = token[0]
+                    resp.set_cookie("SSSNTKN", token, secure=False)
+                    resp.status = falcon.HTTP_200
+                    resp.location = 'http://localhost:8080/users.html'

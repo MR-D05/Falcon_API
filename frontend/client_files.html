@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script type="text/javascript" src="/client_area/js/admin_homepage.js"></script>
+        <script type="text/javascript" src="/client_area/js/client_files.js"></script>
+
+    </head>
+    <body>
+    <div class="container">
+        <header>
+           <h1 id="client"></h1>
+        </header>
+        <form id="file-form"  action="https://localhost/add_file" method="POST" enctype=multipart/form-data>
+        <input type="file" id="file-select" name="file"/>
+        <input type="hidden" id="client_name" name="hidden"/>
+        <button type="submit" id="upload-button">Upload</button>
+        </form>
+        <ul id="files">
+        </ul>
+    </div>
+<script type="text/javascript" src="/client_area/js/client_files.js"></script>
+    </body>
+</html>
+

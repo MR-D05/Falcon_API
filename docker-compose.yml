@@ -1,0 +1,22 @@
+version: '3'
+services:
+    web:
+        build: .
+        command: gunicorn --reload -b 0.0.0.0:5000 'app.app:get_app()'
+        volumes:
+            - .:/src
+            - ./sql:/opt/flyway-5.0.1/sql
+        ports:
+            - "5000:5000"
+        links:
+            - db
+        environment:
+            DATABASE_URL: postgresql://postgres:5432/falconap_db_1?user=postgres&password=postgres
+            APP_STORAGE_PATH: ./files
+    db:
+        image: postgres
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+        ports:
+            - "5432:5432"
